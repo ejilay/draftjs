@@ -5,7 +5,7 @@ building rich text editors. However, it does not support exporting
 documents at HTML. This package is designed to take the raw `ContentState`
 (output of [`convertToRaw`](https://facebook.github.io/draft-js/docs/api-reference-data-conversion.html#converttoraw))
 from Draft.js and convert it to HTML using [Go](https://golang.org). Mostly it
-useful for server-side rendering&
+useful for server-side rendering.
 
 ## Usage
 
