@@ -5,7 +5,7 @@ import (
 	"bytes"
 )
 
-func (contentState *ContentState) render(config *HTMLConfig) string {
+func (contentState *ContentState) render(config *Config) string {
 	var (
 		buf       bytes.Buffer
 		prevBlock *ContentBlock
@@ -19,9 +19,7 @@ func (contentState *ContentState) render(config *HTMLConfig) string {
 			buf.WriteString(GetBlockWrapperEndTag(prevBlock, config))
 			buf.WriteString(GetBlockWrapperStartTag(block, config))
 		}
-		buf.WriteString(GetBlockStartTag(block, config))
-		buf.WriteString(PerformInlineStylesAndEntities(contentState, block, config))
-		buf.WriteString(GetBlockEndTag(block, config))
+		renderBlock(&buf, block, config, contentState)
 		prevBlock = block
 	}
 	if wrapperTag != "" {
@@ -30,13 +28,21 @@ func (contentState *ContentState) render(config *HTMLConfig) string {
 	return buf.String()
 }
 
-func Render(contentState *ContentState, config *HTMLConfig) string {
+func renderBlock(buf *bytes.Buffer, block *ContentBlock, config *Config, contentState *ContentState) {
+	buf.WriteString(GetBlockStartTag(block, config))
+	buf.WriteString(PerformInlineStylesAndEntities(contentState, block, config))
+	buf.WriteString(GetBlockEndTag(block, config))
+}
+
+// Render renders Draft.js content state to string with config
+func Render(contentState *ContentState, config *Config) string {
 	if config == nil {
-		config = DefaultConfig()
+		config = NewDefaultConfig()
 	}
 	return contentState.render(config)
 }
 
+// Interface implementation
 func (contentState *ContentState) String() string {
 	return Render(contentState, nil)
 }

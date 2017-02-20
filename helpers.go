@@ -9,7 +9,7 @@ import (
 	"unicode/utf8"
 )
 
-func GetDescriptorFromMap(key string, sourceMap map[string]*HTMLDescriptor) *HTMLDescriptor {
+func GetDescriptorFromMap(key string, sourceMap map[string]*Descriptor) *Descriptor {
 	if sourceMap == nil {
 		return nil
 	}
@@ -19,7 +19,7 @@ func GetDescriptorFromMap(key string, sourceMap map[string]*HTMLDescriptor) *HTM
 	return nil
 }
 
-func GetBlockWrapperTag(block *ContentBlock, config *HTMLConfig) string {
+func GetBlockWrapperTag(block *ContentBlock, config *Config) string {
 	if block == nil || config == nil {
 		return ""
 	}
@@ -30,7 +30,7 @@ func GetBlockWrapperTag(block *ContentBlock, config *HTMLConfig) string {
 	return options.Wrapper
 }
 
-func GetBlockWrapperStartTag(block *ContentBlock, config *HTMLConfig) string {
+func GetBlockWrapperStartTag(block *ContentBlock, config *Config) string {
 	tagName := GetBlockWrapperTag(block, config)
 	if tagName == "" {
 		return ""
@@ -38,7 +38,7 @@ func GetBlockWrapperStartTag(block *ContentBlock, config *HTMLConfig) string {
 	return fmt.Sprintf("<%s>", tagName)
 }
 
-func GetBlockWrapperEndTag(block *ContentBlock, config *HTMLConfig) string {
+func GetBlockWrapperEndTag(block *ContentBlock, config *Config) string {
 	tagName := GetBlockWrapperTag(block, config)
 	if tagName == "" {
 		return ""
@@ -46,7 +46,7 @@ func GetBlockWrapperEndTag(block *ContentBlock, config *HTMLConfig) string {
 	return fmt.Sprintf("</%s>", tagName)
 }
 
-func GetBlockTag(block *ContentBlock, config *HTMLConfig) string {
+func GetBlockTag(block *ContentBlock, config *Config) string {
 	if block == nil || config == nil {
 		return ""
 	}
@@ -57,7 +57,7 @@ func GetBlockTag(block *ContentBlock, config *HTMLConfig) string {
 	return options.Element
 }
 
-func GetBlockStartTag(block *ContentBlock, config *HTMLConfig) string {
+func GetBlockStartTag(block *ContentBlock, config *Config) string {
 	tagName := GetBlockTag(block, config)
 	if tagName == "" {
 		return ""
@@ -65,7 +65,7 @@ func GetBlockStartTag(block *ContentBlock, config *HTMLConfig) string {
 	return fmt.Sprintf("<%s>", tagName)
 }
 
-func GetBlockEndTag(block *ContentBlock, config *HTMLConfig) string {
+func GetBlockEndTag(block *ContentBlock, config *Config) string {
 	tagName := GetBlockTag(block, config)
 	if tagName == "" {
 		return ""
@@ -73,7 +73,7 @@ func GetBlockEndTag(block *ContentBlock, config *HTMLConfig) string {
 	return fmt.Sprintf("</%s>", tagName)
 }
 
-func GetStylemapElement(style *InlineStyleRange, config *HTMLConfig) string {
+func GetStylemapElement(style *InlineStyleRange, config *Config) string {
 	if style == nil || config == nil {
 		return ""
 	}
@@ -84,7 +84,7 @@ func GetStylemapElement(style *InlineStyleRange, config *HTMLConfig) string {
 	return options.Element
 }
 
-func GetStyleStartTag(style *InlineStyleRange, config *HTMLConfig) string {
+func GetStyleStartTag(style *InlineStyleRange, config *Config) string {
 	tagName := GetStylemapElement(style, config)
 	if tagName == "" {
 		return ""
@@ -92,7 +92,7 @@ func GetStyleStartTag(style *InlineStyleRange, config *HTMLConfig) string {
 	return fmt.Sprintf("<%s>", tagName)
 }
 
-func GetStyleEndTag(style *InlineStyleRange, config *HTMLConfig) string {
+func GetStyleEndTag(style *InlineStyleRange, config *Config) string {
 	tagName := GetStylemapElement(style, config)
 	if tagName == "" {
 		return ""
@@ -100,7 +100,7 @@ func GetStyleEndTag(style *InlineStyleRange, config *HTMLConfig) string {
 	return fmt.Sprintf("</%s>", tagName)
 }
 
-func GetEntityDecorator(content *ContentState, entityRange *EntityRange, config *HTMLConfig) (Decorator, *Entity) {
+func GetEntityDecorator(content *ContentState, entityRange *EntityRange, config *Config) (Decorator, *Entity) {
 	var (
 		entity *Entity
 		ok     bool
@@ -115,7 +115,7 @@ func GetEntityDecorator(content *ContentState, entityRange *EntityRange, config 
 	return descriptor.Decorator, entity
 }
 
-func GetEntityStartTag(content *ContentState, entityRange *EntityRange, config *HTMLConfig) string {
+func GetEntityStartTag(content *ContentState, entityRange *EntityRange, config *Config) string {
 	decorator, entity := GetEntityDecorator(content, entityRange, config)
 	if decorator == nil {
 		return ""
@@ -123,7 +123,7 @@ func GetEntityStartTag(content *ContentState, entityRange *EntityRange, config *
 	return decorator.RenderBeginning(entity.Data)
 }
 
-func GetEntityEndTag(content *ContentState, entityRange *EntityRange, config *HTMLConfig) string {
+func GetEntityEndTag(content *ContentState, entityRange *EntityRange, config *Config) string {
 	decorator, entity := GetEntityDecorator(content, entityRange, config)
 	if decorator == nil {
 		return ""
@@ -147,7 +147,7 @@ func substring(s string, start int, end int) string {
 	return s[start_str_idx:]
 }
 
-func PerformInlineStylesAndEntities(content *ContentState, block *ContentBlock, config *HTMLConfig) string {
+func PerformInlineStylesAndEntities(content *ContentState, block *ContentBlock, config *Config) string {
 	ranges, noStyles := GetRanges(block)
 	if noStyles {
 		return template.HTMLEscapeString(block.Text)
