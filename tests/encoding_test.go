@@ -3,10 +3,12 @@ package draftjs
 import (
 	"encoding/json"
 	"testing"
+
+	"github.com/ejilay/draftjs"
 )
 
-func TestDecorator_Render(t *testing.T) {
-	contentStates := []ContentState{}
+func TestRender(t *testing.T) {
+	contentStates := []draftjs.ContentState{}
 	var err error
 	if err = json.Unmarshal([]byte(testString), &contentStates); err != nil {
 		t.Errorf("Failed unmarshal content: %v", err)
@@ -18,10 +20,10 @@ func TestDecorator_Render(t *testing.T) {
 		return
 	}
 
-	config := DefaultConfig()
+	config := draftjs.NewDefaultConfig()
 	i := 0
 	for _, block := range contentStates {
-		s := Render(&block, config)
+		s := draftjs.Render(&block, config)
 		if s != needString[i] {
 			t.Errorf("%s != %s", s, needString[i])
 			return
