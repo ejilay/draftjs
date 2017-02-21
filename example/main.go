@@ -15,7 +15,10 @@ func main() {
 
 	// make auxiliary variable
 	contentState := draftjs.ContentState{}
-	json.Unmarshal([]byte(draftState), &contentState) // don't forget error handling
+	if err := json.Unmarshal([]byte(draftState), &contentState); err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// prepare some config (HTML here)
 	config := draftjs.NewDefaultConfig()
