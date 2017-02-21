@@ -29,6 +29,48 @@ func main() {
 	fmt.Println(s)
 }
 ```
+For _RawContentState_ like this
+```json
+{
+  "entityMap": {
+    "0": {
+      "type": "LINK",
+      "data": {
+        "url": "https://medium.com/@rajaraodv/how-draft-js-represents-rich-text-data-eeabb5f25cf2#.ce9y2wyux"
+      }
+    }
+  },
+  "blocks": [
+    {
+      "text": "Rich text with link",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {
+          "offset": 0,
+          "length": 4,
+          "style": "BOLD"
+        }, {
+          "offset": 2,
+          "length": 10,
+          "style": "UNDERLINE"
+        }, {
+          "offset": 5,
+          "length": 4,
+          "style": "ITALIC"
+        }, {
+          "offset": 10,
+          "length": 4,
+          "style": "CODE"
+        }
+      ],
+      "entityRanges": [{
+          "offset": 15,
+          "length": 4,
+          "key": 0
+       }]
+}]}
+```
 It will give something like this but without indention:
 ```html
 <p>
@@ -47,6 +89,7 @@ It will give something like this but without indention:
 </p>
 
 ```
+That look like
 <p>
 	<strong>Ri</strong>
 	<strong>
