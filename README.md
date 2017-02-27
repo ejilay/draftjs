@@ -1,5 +1,7 @@
 # Draft.js Exporter
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/ejilay/draftjs)](https://goreportcard.com/report/github.com/ejilay/draftjs)
+
 [Draft.js](https://facebook.github.io/draft-js/) is a framework for
 building rich text editors. However, it does not support exporting
 documents at HTML. This package is designed to take the raw `ContentState`
