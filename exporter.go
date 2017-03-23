@@ -38,6 +38,10 @@ func renderBlocks(contentState *ContentState, config *Config, buf *bytes.Buffer,
 
 // Render renders Draft.js content state to string with config
 func Render(contentState *ContentState, config *Config) string {
+	if contentState == nil {
+		return ""
+	}
+
 	var buf bytes.Buffer
 
 	buf.Grow(256 * 1024) // с потолка
