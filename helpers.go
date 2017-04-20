@@ -154,7 +154,7 @@ func PerformInlineStylesAndEntities(content *ContentState, block *ContentBlock, 
 	}
 
 	var buf bytes.Buffer
-	buf.Grow(256 * 1024) // с потолка
+	//buf.Grow(256 * 1024) // с потолка
 	for _, rng := range ranges {
 		styles := GetStyleForRange(rng, block)
 		entities := GetEntityForRange(rng, block)
@@ -177,10 +177,10 @@ func PerformInlineStylesAndEntities(content *ContentState, block *ContentBlock, 
 }
 
 func GetEntityForRange(r *Range, block *ContentBlock) []*EntityRange {
-	res := make([]*EntityRange, 0, len(block.EntityRanges))
 	if block.EntityRanges == nil || len(block.EntityRanges) == 0 {
-		return res
+		return nil
 	}
+	res := make([]*EntityRange, 0, len(block.EntityRanges))
 	for _, entityRange := range block.EntityRanges {
 		if r.Offset >= entityRange.Offset && r.Offset+r.Length <= entityRange.Offset+entityRange.Length {
 			res = append(res, entityRange)
@@ -190,10 +190,11 @@ func GetEntityForRange(r *Range, block *ContentBlock) []*EntityRange {
 }
 
 func GetStyleForRange(r *Range, block *ContentBlock) []*InlineStyleRange {
-	res := make([]*InlineStyleRange, 0, len(block.InlineStyleRanges))
+
 	if block.InlineStyleRanges == nil || len(block.InlineStyleRanges) == 0 {
-		return res
+		return nil
 	}
+	res := make([]*InlineStyleRange, 0, len(block.InlineStyleRanges))
 	for _, styleRange := range block.InlineStyleRanges {
 		if r.Offset >= styleRange.Offset && r.Offset+r.Length <= styleRange.Offset+styleRange.Length {
 			res = append(res, styleRange)

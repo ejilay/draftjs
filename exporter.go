@@ -40,7 +40,7 @@ func renderBlocks(contentState *ContentState, config *Config, buf *bytes.Buffer,
 func Render(contentState *ContentState, config *Config) string {
 	var buf bytes.Buffer
 
-	buf.Grow(256 * 1024) // с потолка
+	//buf.Grow(256 * 1024) // с потолка
 
 	if config == nil {
 		config = NewDefaultConfig()
