@@ -5,7 +5,7 @@ import (
 	"bytes"
 )
 
-func renderBlocks(contentState *ContentState, config *Config, buf *bytes.Buffer, blockIterator *BlockIterator) {
+func renderBlocks(contentState *ContentState, config *Config, blockIterator *BlockIterator, buf *bytes.Buffer) {
 
 	var wrapperedBlock *ContentBlock
 	wrapperTag := ""
@@ -20,9 +20,9 @@ func renderBlocks(contentState *ContentState, config *Config, buf *bytes.Buffer,
 		currentBlock := blockIterator.block
 
 		buf.WriteString(GetBlockStartTag(currentBlock, config))
-		buf.WriteString(PerformInlineStylesAndEntities(contentState, currentBlock, config))
+		PerformInlineStylesAndEntities(contentState, currentBlock, config, buf)
 		if blockIterator.HasNext() && blockIterator.NextBlock().Depth > blockIterator.block.Depth {
-			renderBlocks(contentState, config, buf, blockIterator.StepNext())
+			renderBlocks(contentState, config, blockIterator.StepNext(), buf)
 		}
 		buf.WriteString(GetBlockEndTag(currentBlock, config))
 
@@ -40,15 +40,20 @@ func renderBlocks(contentState *ContentState, config *Config, buf *bytes.Buffer,
 func Render(contentState *ContentState, config *Config) string {
 	var buf bytes.Buffer
 
-	//buf.Grow(256 * 1024) // с потолка
-
 	if config == nil {
 		config = NewDefaultConfig()
 	}
 
-	renderBlocks(contentState, config, &buf, NewBlockIterator(contentState))
+	config.Compile()
+
+	RenderWithBuf(contentState, config, &buf)
 
 	return buf.String()
+}
+
+// RenderWithBuf renders Draft.js content state to buffer with config
+func RenderWithBuf(contentState *ContentState, config *Config, buf *bytes.Buffer) {
+	renderBlocks(contentState, config, NewBlockIterator(contentState), buf)
 }
 
 // Interface implementation

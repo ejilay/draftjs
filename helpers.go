@@ -31,19 +31,41 @@ func GetBlockWrapperTag(block *ContentBlock, config *Config) string {
 }
 
 func GetBlockWrapperStartTag(block *ContentBlock, config *Config) string {
-	tagName := GetBlockWrapperTag(block, config)
-	if tagName == "" {
+	if block == nil {
 		return ""
 	}
-	return fmt.Sprintf("<%s>", tagName)
+	const cacheKey = "GetBlockWrapperStartTag"
+	if tag, exist := config.GetFromCache(cacheKey, block.Type); exist {
+		return tag
+	}
+	tagName := GetBlockWrapperTag(block, config)
+	var tag string
+	if tagName == "" {
+		tag = ""
+	} else {
+		tag = fmt.Sprintf("<%s>", tagName)
+	}
+	config.SetToCache(cacheKey, block.Type, tag)
+	return tag
 }
 
 func GetBlockWrapperEndTag(block *ContentBlock, config *Config) string {
-	tagName := GetBlockWrapperTag(block, config)
-	if tagName == "" {
+	if block == nil {
 		return ""
 	}
-	return fmt.Sprintf("</%s>", tagName)
+	const cacheKey = "GetBlockWrapperEndTag"
+	if tag, exist := config.GetFromCache(cacheKey, block.Type); exist {
+		return tag
+	}
+	tagName := GetBlockWrapperTag(block, config)
+	var tag string
+	if tagName == "" {
+		tag = ""
+	} else {
+		tag = fmt.Sprintf("</%s>", tagName)
+	}
+	config.SetToCache(cacheKey, block.Type, tag)
+	return tag
 }
 
 func GetBlockTag(block *ContentBlock, config *Config) string {
@@ -58,19 +80,41 @@ func GetBlockTag(block *ContentBlock, config *Config) string {
 }
 
 func GetBlockStartTag(block *ContentBlock, config *Config) string {
-	tagName := GetBlockTag(block, config)
-	if tagName == "" {
+	if block == nil {
 		return ""
 	}
-	return fmt.Sprintf("<%s>", tagName)
+	const cacheKey = "GetBlockStartTag"
+	if tag, exist := config.GetFromCache(cacheKey, block.Type); exist {
+		return tag
+	}
+	tagName := GetBlockTag(block, config)
+	var tag string
+	if tagName == "" {
+		tag = ""
+	} else {
+		tag = fmt.Sprintf("<%s>", tagName)
+	}
+	config.SetToCache(cacheKey, block.Type, tag)
+	return tag
 }
 
 func GetBlockEndTag(block *ContentBlock, config *Config) string {
-	tagName := GetBlockTag(block, config)
-	if tagName == "" {
+	if block == nil {
 		return ""
 	}
-	return fmt.Sprintf("</%s>", tagName)
+	const cacheKey = "GetBlockEndTag"
+	if tag, exist := config.GetFromCache(cacheKey, block.Type); exist {
+		return tag
+	}
+	tagName := GetBlockTag(block, config)
+	var tag string
+	if tagName == "" {
+		tag = ""
+	} else {
+		tag = fmt.Sprintf("</%s>", tagName)
+	}
+	config.SetToCache(cacheKey, block.Type, tag)
+	return tag
 }
 
 func GetStylemapElement(style *InlineStyleRange, config *Config) string {
@@ -85,19 +129,41 @@ func GetStylemapElement(style *InlineStyleRange, config *Config) string {
 }
 
 func GetStyleStartTag(style *InlineStyleRange, config *Config) string {
-	tagName := GetStylemapElement(style, config)
-	if tagName == "" {
+	if style == nil {
 		return ""
 	}
-	return fmt.Sprintf("<%s>", tagName)
+	const cacheKey = "GetStyleStartTag"
+	if tag, exist := config.GetFromCache(cacheKey, style.Style); exist {
+		return tag
+	}
+	tagName := GetStylemapElement(style, config)
+	var tag string
+	if tagName == "" {
+		tag = ""
+	} else {
+		tag = fmt.Sprintf("<%s>", tagName)
+	}
+	config.SetToCache(cacheKey, style.Style, tag)
+	return tag
 }
 
 func GetStyleEndTag(style *InlineStyleRange, config *Config) string {
-	tagName := GetStylemapElement(style, config)
-	if tagName == "" {
+	if style == nil {
 		return ""
 	}
-	return fmt.Sprintf("</%s>", tagName)
+	const cacheKey = "GetStyleEndTag"
+	if tag, exist := config.GetFromCache(cacheKey, style.Style); exist {
+		return tag
+	}
+	tagName := GetStylemapElement(style, config)
+	var tag string
+	if tagName == "" {
+		tag = ""
+	} else {
+		tag = fmt.Sprintf("</%s>", tagName)
+	}
+	config.SetToCache(cacheKey, style.Style, tag)
+	return tag
 }
 
 func GetEntityDecorator(content *ContentState, entityRange *EntityRange, config *Config) (Decorator, *Entity) {
@@ -147,14 +213,13 @@ func substring(s string, start int, end int) string {
 	return s[start_str_idx:]
 }
 
-func PerformInlineStylesAndEntities(content *ContentState, block *ContentBlock, config *Config) string {
+func PerformInlineStylesAndEntities(content *ContentState, block *ContentBlock, config *Config, buf *bytes.Buffer) {
 	ranges, noStyles := GetRanges(block)
 	if noStyles {
-		return template.HTMLEscapeString(block.Text)
+		buf.WriteString(template.HTMLEscapeString(block.Text))
+		return
 	}
 
-	var buf bytes.Buffer
-	//buf.Grow(256 * 1024) // с потолка
 	for _, rng := range ranges {
 		styles := GetStyleForRange(rng, block)
 		entities := GetEntityForRange(rng, block)
@@ -173,14 +238,13 @@ func PerformInlineStylesAndEntities(content *ContentState, block *ContentBlock, 
 		}
 	}
 
-	return buf.String()
 }
 
 func GetEntityForRange(r *Range, block *ContentBlock) []*EntityRange {
 	if block.EntityRanges == nil || len(block.EntityRanges) == 0 {
 		return nil
 	}
-	res := make([]*EntityRange, 0, len(block.EntityRanges))
+	res := make([]*EntityRange, 0, 0)
 	for _, entityRange := range block.EntityRanges {
 		if r.Offset >= entityRange.Offset && r.Offset+r.Length <= entityRange.Offset+entityRange.Length {
 			res = append(res, entityRange)
@@ -194,7 +258,7 @@ func GetStyleForRange(r *Range, block *ContentBlock) []*InlineStyleRange {
 	if block.InlineStyleRanges == nil || len(block.InlineStyleRanges) == 0 {
 		return nil
 	}
-	res := make([]*InlineStyleRange, 0, len(block.InlineStyleRanges))
+	res := make([]*InlineStyleRange, 0, 0)
 	for _, styleRange := range block.InlineStyleRanges {
 		if r.Offset >= styleRange.Offset && r.Offset+r.Length <= styleRange.Offset+styleRange.Length {
 			res = append(res, styleRange)
@@ -205,17 +269,13 @@ func GetStyleForRange(r *Range, block *ContentBlock) []*InlineStyleRange {
 
 // bool == fullstring (no styles)
 func GetRanges(block *ContentBlock) ([]*Range, bool) {
-	res := make([]*Range, 1)
-	res[0] = new(Range)
-	res[0].Offset = 0
-	res[0].Length = utf8.RuneCountInString(block.Text)
-
 	if len(block.InlineStyleRanges)+len(block.EntityRanges) == 0 {
-		return res, true
+		return nil, true
 	}
-	breakPoints := GetBreakPoints(block)
+
+	breakPoints, runeCount := GetBreakPoints(block)
 	prev := 0
-	res = make([]*Range, 0, len(breakPoints))
+	res := make([]*Range, 0, 0)
 	var lastRange *Range
 	for _, v := range breakPoints {
 		if v == prev {
@@ -229,7 +289,7 @@ func GetRanges(block *ContentBlock) ([]*Range, bool) {
 		lastRange = t
 	}
 	if lastRange != nil {
-		if lastRange.Length+lastRange.Offset < utf8.RuneCountInString(block.Text) {
+		if lastRange.Length+lastRange.Offset < runeCount {
 			t := new(Range)
 			t.Offset = lastRange.Offset + lastRange.Length
 			t.Length = utf8.RuneCountInString(block.Text) - t.Offset
@@ -239,11 +299,12 @@ func GetRanges(block *ContentBlock) ([]*Range, bool) {
 	return res, false
 }
 
-func GetBreakPoints(block *ContentBlock) []int {
-	breakPoints := make([]int, 0, utf8.RuneCountInString(block.Text))
+func GetBreakPoints(block *ContentBlock) ([]int, int) {
+	runeCount := utf8.RuneCountInString(block.Text)
+	breakPoints := make([]int, runeCount, runeCount)
 
 	inArray := func(v int, arr []int) bool {
-		for i := 0; i < len(arr); i++ {
+		for i := len(arr) - 1; i >= 0; i-- {
 			if v == arr[i] {
 				return true
 			}
@@ -259,16 +320,20 @@ func GetBreakPoints(block *ContentBlock) []int {
 		ranges = append(ranges, &entityRange.Range)
 	}
 
+	breakPointsCount := 0
 	for _, styleRange := range ranges {
-		if !inArray(styleRange.Offset, breakPoints) {
-			breakPoints = append(breakPoints, styleRange.Offset)
+		if !inArray(styleRange.Offset, breakPoints[:breakPointsCount]) {
+			breakPoints[breakPointsCount] = styleRange.Offset
+			breakPointsCount++
 		}
-		if !inArray(styleRange.Offset+styleRange.Length, breakPoints) {
-			breakPoints = append(breakPoints, styleRange.Offset+styleRange.Length)
+		if !inArray(styleRange.Offset+styleRange.Length, breakPoints[:breakPointsCount]) {
+			breakPoints[breakPointsCount] = styleRange.Offset + styleRange.Length
+			breakPointsCount++
 		}
 	}
 
+	breakPoints = breakPoints[:breakPointsCount]
 	sort.Ints(breakPoints)
 
-	return breakPoints
+	return breakPoints, runeCount
 }
