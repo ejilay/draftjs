@@ -133,15 +133,15 @@ func NewDefaultConfig() *Config {
 	return config
 }
 
-func (config *Config) Compile() {
+func (config *Config) Precache() {
 	if config.cache == nil {
 		config.cache = NewCache()
 	}
-	config.CompileBlocks()
-	config.CompileStyles()
+	config.PrecacheBlocks()
+	config.PrecacheStyles()
 }
 
-func (config *Config) CompileBlocks() {
+func (config *Config) PrecacheBlocks() {
 	contentBlock := &ContentBlock{}
 	for _, descriptor := range config.blockMap {
 		contentBlock.Type = descriptor.Type
@@ -152,7 +152,7 @@ func (config *Config) CompileBlocks() {
 	}
 }
 
-func (config *Config) CompileStyles() {
+func (config *Config) PrecacheStyles() {
 	styleRange := &InlineStyleRange{}
 	for _, style := range config.styleMap {
 		styleRange.Style = style.Type

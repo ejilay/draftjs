@@ -39,7 +39,7 @@ func BenchmarkRender(b *testing.B) {
 	}
 
 	config := draftjs.NewDefaultConfig()
-	config.Compile()
+	config.Precache()
 
 	var buf bytes.Buffer
 	buf.Grow(10 * 1024 * 1024)

@@ -44,7 +44,7 @@ func Render(contentState *ContentState, config *Config) string {
 		config = NewDefaultConfig()
 	}
 
-	config.Compile()
+	config.Precache()
 
 	RenderWithBuf(contentState, config, &buf)
 
