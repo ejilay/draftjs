@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"bytes"
 	"github.com/ejilay/draftjs"
 )
 
@@ -25,4 +26,30 @@ func TestRender(t *testing.T) {
 		}
 		i++
 	}
+}
+
+var S string // preventing compiler optimization
+
+func BenchmarkRender(b *testing.B) {
+	contentStates := []draftjs.ContentState{}
+	var err error
+	if err = json.Unmarshal([]byte(TestString), &contentStates); err != nil {
+		b.Errorf("Failed unmarshal content: %v", err)
+		return
+	}
+
+	config := draftjs.NewDefaultConfig()
+	config.Precache()
+
+	var buf bytes.Buffer
+	buf.Grow(10 * 1024 * 1024)
+
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		for _, block := range contentStates {
+			draftjs.RenderWithBuf(&block, config, &buf)
+		}
+		buf.Reset()
+	}
+	S = buf.String()
 }

@@ -4,6 +4,15 @@ type Config struct {
 	entityDecorators map[string]*Descriptor
 	blockMap         map[string]*Descriptor
 	styleMap         map[string]*Descriptor
+	cache            Cache
+}
+
+type CacheElement map[string]string
+
+type Cache map[string]CacheElement
+
+func NewCache() Cache {
+	return make(Cache)
 }
 
 type Descriptor struct {
@@ -122,4 +131,44 @@ func NewDefaultConfig() *Config {
 	SetDefaultStyles(config)
 	SetDefaultDecorators(config)
 	return config
+}
+
+func (config *Config) Precache() {
+	if config.cache == nil {
+		config.cache = NewCache()
+	}
+	config.PrecacheBlocks()
+	config.PrecacheStyles()
+}
+
+func (config *Config) PrecacheBlocks() {
+	contentBlock := &ContentBlock{}
+	for _, descriptor := range config.blockMap {
+		contentBlock.Type = descriptor.Type
+		GetBlockWrapperStartTag(contentBlock, config)
+		GetBlockWrapperEndTag(contentBlock, config)
+		GetBlockStartTag(contentBlock, config)
+		GetBlockEndTag(contentBlock, config)
+	}
+}
+
+func (config *Config) PrecacheStyles() {
+	styleRange := &InlineStyleRange{}
+	for _, style := range config.styleMap {
+		styleRange.Style = style.Type
+		GetStyleEndTag(styleRange, config)
+		GetStyleStartTag(styleRange, config)
+	}
+}
+
+func (config *Config) GetFromCache(key1, key2 string) (string, bool) {
+	value, exist := config.cache[key1][key2]
+	return value, exist
+}
+
+func (config *Config) SetToCache(key1, key2, value string) {
+	if config.cache[key1] == nil {
+		config.cache[key1] = make(CacheElement)
+	}
+	config.cache[key1][key2] = value
 }
