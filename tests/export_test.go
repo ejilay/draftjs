@@ -14,7 +14,7 @@ func TestRender(t *testing.T) {
 		err           error
 	)
 
-	if err = json.Unmarshal([]byte(testString), &contentStates); err != nil {
+	if err = json.Unmarshal([]byte(TestString), &contentStates); err != nil {
 		t.Errorf("Failed unmarshal content: %v", err)
 		return
 	}
@@ -23,9 +23,9 @@ func TestRender(t *testing.T) {
 	i := 0
 	for _, block := range contentStates {
 		s := draftjs.Render(&block, config)
-		if s != needStrings[i] {
+		if s != NeedString[i] {
 			t.Errorf("\n%s\n", s)
-			t.Errorf("\n%s\n", needStrings[i])
+			t.Errorf("\n%s\n", NeedString[i])
 		}
 		i++
 	}
@@ -67,6 +67,25 @@ func TestRenderWrongRanges(t *testing.T) {
 	}
 }
 
+func TestRenderPlainText(t *testing.T) {
+	contentStates := []draftjs.ContentState{}
+	var err error
+	if err = json.Unmarshal([]byte(TestString), &contentStates); err != nil {
+		t.Errorf("Failed unmarshal content: %v", err)
+		return
+	}
+
+	i := 0
+	for _, contentState := range contentStates {
+		s := draftjs.RenderPlainText(&contentState)
+		if s != NeedStringPlain[i] { // TODO: make proper test strings
+			t.Errorf("\n%s\n", s)
+			t.Errorf("\n%s\n", NeedString[i])
+		}
+		i++
+	}
+}
+
 var S string // preventing compiler optimization
 
 func BenchmarkRender(b *testing.B) {
@@ -75,7 +94,7 @@ func BenchmarkRender(b *testing.B) {
 		err           error
 	)
 
-	if err = json.Unmarshal([]byte(testString), &contentStates); err != nil {
+	if err = json.Unmarshal([]byte(TestString), &contentStates); err != nil {
 		b.Errorf("Failed unmarshal content: %v", err)
 		return
 	}

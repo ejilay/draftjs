@@ -60,3 +60,21 @@ func RenderWithBuf(contentState *ContentState, config *Config, buf *bytes.Buffer
 func (contentState *ContentState) String() string {
 	return Render(contentState, nil)
 }
+
+func RenderPlainText(contentState *ContentState) string {
+	var buffer bytes.Buffer
+	textLen := len(contentState.Blocks)
+	for _, block := range contentState.Blocks {
+		textLen += len(block.Text)
+	}
+	buffer.Grow(textLen)
+	RenderPlainTextToBuffer(contentState, &buffer)
+	return buffer.String()
+}
+
+func RenderPlainTextToBuffer(contentState *ContentState, buffer *bytes.Buffer) {
+	for _, block := range contentState.Blocks {
+		buffer.WriteString(block.Text)
+		buffer.WriteString("\n")
+	}
+}
