@@ -120,3 +120,11 @@ You'll need Golang installed first :o)
 ```bash
 go get github.com/ejilay/draftjs
 ```
+
+## Testing
+
+To test run the following command in project's root directory:
+
+```bash
+go test ./...
+```
