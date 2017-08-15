@@ -113,6 +113,16 @@ func SetDefaultStyles(config *Config) {
 	descriptor.Type = "UNDERLINE"
 	descriptor.Element = "ins"
 	config.SetStyleMapElement(descriptor)
+
+	descriptor = new(Descriptor)
+	descriptor.Type = "SUBSCRIPT"
+	descriptor.Element = "sub"
+	config.SetStyleMapElement(descriptor)
+
+	descriptor = new(Descriptor)
+	descriptor.Type = "SUPERSCRIPT"
+	descriptor.Element = "sup"
+	config.SetStyleMapElement(descriptor)
 }
 
 func SetDefaultDecorators(config *Config) {
