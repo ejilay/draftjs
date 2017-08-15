@@ -661,7 +661,59 @@ var (
         }
       }
     ]
-  },{"entityMap":{},"blocks":[{"key":"citfp","text":"pp1","type":"ordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"1jje0","text":"rgh","type":"ordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"b6b9k","text":"pp4","type":"ordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"7t6hi","text":"pp","type":"ordered-list-item","depth":1,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"1a0r1","text":"dwf","type":"ordered-list-item","depth":2,"inlineStyleRanges":[{"offset":0,"length":3,"style":"ITALIC"}],"entityRanges":[],"data":{}},{"key":"558bm","text":"rge","type":"ordered-list-item","depth":2,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"a0d0g","text":"wdf","type":"ordered-list-item","depth":2,"inlineStyleRanges":[{"offset":0,"length":3,"style":"BOLD"}],"entityRanges":[],"data":{}},{"key":"fkok6","text":"efg","type":"ordered-list-item","depth":1,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"81qon","text":"bhn","type":"ordered-list-item","depth":2,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"1imp3","text":"wefg","type":"ordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"drgoj","text":"pp2","type":"ordered-list-item","depth":1,"inlineStyleRanges":[{"offset":0,"length":3,"style":"BOLD"}],"entityRanges":[],"data":{}},{"key":"hd28","text":"pp3","type":"unordered-list-item","depth":2,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"8g8r7","text":"asd","type":"unordered-list-item","depth":2,"inlineStyleRanges":[],"entityRanges":[],"data":{}}]}
+  },{"entityMap":{},"blocks":[{"key":"citfp","text":"pp1","type":"ordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"1jje0","text":"rgh","type":"ordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"b6b9k","text":"pp4","type":"ordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"7t6hi","text":"pp","type":"ordered-list-item","depth":1,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"1a0r1","text":"dwf","type":"ordered-list-item","depth":2,"inlineStyleRanges":[{"offset":0,"length":3,"style":"ITALIC"}],"entityRanges":[],"data":{}},{"key":"558bm","text":"rge","type":"ordered-list-item","depth":2,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"a0d0g","text":"wdf","type":"ordered-list-item","depth":2,"inlineStyleRanges":[{"offset":0,"length":3,"style":"BOLD"}],"entityRanges":[],"data":{}},{"key":"fkok6","text":"efg","type":"ordered-list-item","depth":1,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"81qon","text":"bhn","type":"ordered-list-item","depth":2,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"1imp3","text":"wefg","type":"ordered-list-item","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"drgoj","text":"pp2","type":"ordered-list-item","depth":1,"inlineStyleRanges":[{"offset":0,"length":3,"style":"BOLD"}],"entityRanges":[],"data":{}},{"key":"hd28","text":"pp3","type":"unordered-list-item","depth":2,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"8g8r7","text":"asd","type":"unordered-list-item","depth":2,"inlineStyleRanges":[],"entityRanges":[],"data":{}}]},
+  {
+    "entityMap": {
+
+    },
+    "blocks": [
+      {
+        "key": "4g603",
+        "text": "H2O",
+        "type": "unstyled",
+        "depth": 0,
+        "inlineStyleRanges": [
+          {
+            "offset": 1,
+            "length": 1,
+            "style": "SUBSCRIPT"
+          }
+        ],
+        "entityRanges": [
+
+        ],
+        "data": {
+
+        }
+      }
+    ]
+  },
+  {
+    "entityMap": {
+
+    },
+    "blocks": [
+      {
+        "key": "4g603",
+        "text": "210 = 1024",
+        "type": "unstyled",
+        "depth": 0,
+        "inlineStyleRanges": [
+          {
+            "offset": 1,
+            "length": 2,
+            "style": "SUPERSCRIPT"
+          }
+        ],
+        "entityRanges": [
+
+        ],
+        "data": {
+
+        }
+      }
+    ]
+  }
 ]`
 
 	NeedString = []string{
@@ -689,6 +741,8 @@ var (
 		`<p><code><strong>q</strong></code><code><strong><del>we</del></strong></code><a href="ya.ru" target="_blank"><code><strong><del>r</del></strong></code></a><a href="ya.ru" target="_blank"><code><strong><del><em>tyuiopas</em></del></strong></code></a><a href="ya.ru" target="_blank"><code><del><em>dfg</em></del></code></a><a href="ya.ru" target="_blank"><code><em>h</em></code></a><a href="ya.ru" target="_blank"><code>jk</code></a><code>l</code></p>`,
 		`<ul><li>a</li><li>b</li><li>c<ol><li>1</li><li>2</li><li>3</li></ol></li></ul>`,
 		`<ol><li>pp1</li><li>rgh</li><li>pp4<ol><li>pp<ol><li><em>dwf</em></li><li>rge</li><li><strong>wdf</strong></li></ol></li><li>efg<ol><li>bhn</li></ol></li></ol></li><li>wefg<ol><li><strong>pp2</strong><ul><li>pp3</li><li>asd</li></ul></li></ol></li></ol>`,
+    `<p>H<sub>2</sub>O</p>`,
+    `<p>2<sup>10</sup> = 1024</p>`,
 	}
 
 	ExampleDraftStateSource = `{
