@@ -1,7 +1,7 @@
 package tests
 
 var (
-	TestString string = `[
+	testString = `[
   {
     "entityMap": {
 
@@ -716,7 +716,7 @@ var (
   }
 ]`
 
-	NeedString = []string{
+	needStrings = []string{
 		`<p><strong>dasdasdasdsadsaывфвыфв</strong></p>`,
 		`<p>dasdasdasdsa<a href="ya.ru" target="_blank">ds</a>aывфвыфв</p>`,
 		`<p>&#34;Война и мир&#34; на экранах Би-Би-Си</p>`,
@@ -741,11 +741,11 @@ var (
 		`<p><code><strong>q</strong></code><code><strong><del>we</del></strong></code><a href="ya.ru" target="_blank"><code><strong><del>r</del></strong></code></a><a href="ya.ru" target="_blank"><code><strong><del><em>tyuiopas</em></del></strong></code></a><a href="ya.ru" target="_blank"><code><del><em>dfg</em></del></code></a><a href="ya.ru" target="_blank"><code><em>h</em></code></a><a href="ya.ru" target="_blank"><code>jk</code></a><code>l</code></p>`,
 		`<ul><li>a</li><li>b</li><li>c<ol><li>1</li><li>2</li><li>3</li></ol></li></ul>`,
 		`<ol><li>pp1</li><li>rgh</li><li>pp4<ol><li>pp<ol><li><em>dwf</em></li><li>rge</li><li><strong>wdf</strong></li></ol></li><li>efg<ol><li>bhn</li></ol></li></ol></li><li>wefg<ol><li><strong>pp2</strong><ul><li>pp3</li><li>asd</li></ul></li></ol></li></ol>`,
-    `<p>H<sub>2</sub>O</p>`,
-    `<p>2<sup>10</sup> = 1024</p>`,
+		`<p>H<sub>2</sub>O</p>`,
+		`<p>2<sup>10</sup> = 1024</p>`,
 	}
 
-	ExampleDraftStateSource = `{
+	exampleDraftStateSource = `{
 	  "entityMap": {
 	    "0": {
 	      "type": "LINK",
@@ -786,4 +786,66 @@ var (
 		}],
 	      "data": {}
 	    }]}`
+
+	testStringOneSymbol = `{
+  "entityMap": {
+    "0": {
+      "type": "LINK",
+      "data": {
+        "url": "http://example.com"
+      }
+    }
+  },
+  "blocks": [
+    {
+      "text": "Q",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {
+          "offset": 0,
+          "length": 1,
+          "style": "BOLD"
+        }
+      ],
+      "entityRanges": [{
+          "offset": 0,
+          "length": 1,
+          "key": 0
+       }]
+}]}
+`
+
+	testStringOneSymbolExpected = `<p><a href="http://example.com" target="_blank"><strong>Q</strong></a></p>`
+
+	testStringWrongRanges = `{
+  "entityMap": {
+    "0": {
+      "type": "LINK",
+      "data": {
+        "url": "http://example.com"
+      }
+    }
+  },
+  "blocks": [
+    {
+      "text": "Q",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {
+          "offset": 5,
+          "length": 1,
+          "style": "BOLD"
+        }
+      ],
+      "entityRanges": [{
+          "offset": 0,
+          "length": 1,
+          "key": 0
+       }]
+}]}
+`
+
+	testStringWrongRangesExpected = `<p><a href="http://example.com" target="_blank">Q</a></p>`
 )

@@ -303,15 +303,6 @@ func GetBreakPoints(block *ContentBlock) ([]int, int) {
 	runeCount := utf8.RuneCountInString(block.Text)
 	breakPoints := make([]int, runeCount, runeCount)
 
-	inArray := func(v int, arr []int) bool {
-		for i := len(arr) - 1; i >= 0; i-- {
-			if v == arr[i] {
-				return true
-			}
-		}
-		return false
-	}
-
 	ranges := make([]*Range, 0, len(block.InlineStyleRanges)+len(block.EntityRanges))
 	for _, styleRange := range block.InlineStyleRanges {
 		ranges = append(ranges, &styleRange.Range)
@@ -322,11 +313,24 @@ func GetBreakPoints(block *ContentBlock) ([]int, int) {
 
 	breakPointsCount := 0
 	for _, styleRange := range ranges {
-		if !inArray(styleRange.Offset, breakPoints[:breakPointsCount]) {
+		if outOfSlice(breakPointsCount, len(breakPoints)) {
+			break
+		}
+
+		if invalidRange(styleRange, runeCount) {
+			continue
+		}
+
+		if !checkedBreakpoint(styleRange.Offset, breakPoints[:breakPointsCount]) {
 			breakPoints[breakPointsCount] = styleRange.Offset
 			breakPointsCount++
 		}
-		if !inArray(styleRange.Offset+styleRange.Length, breakPoints[:breakPointsCount]) {
+
+		if outOfSlice(breakPointsCount, len(breakPoints)) {
+			break
+		}
+
+		if !checkedBreakpoint(styleRange.Offset+styleRange.Length, breakPoints[:breakPointsCount]) {
 			breakPoints[breakPointsCount] = styleRange.Offset + styleRange.Length
 			breakPointsCount++
 		}
@@ -336,4 +340,33 @@ func GetBreakPoints(block *ContentBlock) ([]int, int) {
 	sort.Ints(breakPoints)
 
 	return breakPoints, runeCount
+}
+
+func checkedBreakpoint(breakpoint int, arr []int) bool {
+	// Ignore breakpoint with index 0,
+	// or GetRanges will not work correctly
+	if breakpoint == 0 {
+		return true
+	}
+
+	for i := len(arr) - 1; i >= 0; i-- {
+		if breakpoint == arr[i] {
+			return true
+		}
+	}
+	return false
+}
+
+func outOfSlice(index, length int) bool {
+	if index >= length {
+		return true
+	}
+	return false
+}
+
+func invalidRange(r *Range, maxLength int) bool {
+	if r.Offset >= maxLength || (r.Offset+r.Length) > maxLength {
+		return true
+	}
+	return false
 }
