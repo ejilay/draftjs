@@ -131,6 +131,10 @@ func SetDefaultDecorators(config *Config) {
 	descriptor.Decorator = new(LinkDecorator)
 	config.SetEntityDecorator(descriptor)
 
+	descriptor = new(Descriptor)
+	descriptor.Type = "IMAGE"
+	descriptor.Decorator = new(ImageDecorator)
+	config.SetEntityDecorator(descriptor)
 }
 
 // NewDefaultConfig Makes new config and fills it with

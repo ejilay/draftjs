@@ -17,3 +17,17 @@ func (decorator *LinkDecorator) RenderBeginning(data map[string]string) string {
 func (decorator *LinkDecorator) RenderEnding(data map[string]string) string {
 	return "</a>"
 }
+
+type ImageDecorator struct {
+}
+
+func (decorator *ImageDecorator) RenderBeginning(data map[string]string) string {
+	if alt, ok := data["alt"]; ok {
+		return fmt.Sprintf("<img src=\"%s\" alt=\"%s\">", data["src"], alt)
+	}
+	return fmt.Sprintf("<img src=\"%s\">", data["src"])
+}
+
+func (decorator *ImageDecorator) RenderEnding(data map[string]string) string {
+	return "</img>"
+}
