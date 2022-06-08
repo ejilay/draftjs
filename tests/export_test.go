@@ -10,60 +10,38 @@ import (
 
 func TestRender(t *testing.T) {
 	var (
-		contentStates []draftjs.ContentState
-		err           error
+		contentState draftjs.ContentState
+		err          error
 	)
-
-	if err = json.Unmarshal([]byte(testString), &contentStates); err != nil {
-		t.Errorf("Failed unmarshal content: %v", err)
-		return
-	}
-
 	config := draftjs.NewDefaultConfig()
-	i := 0
-	for _, block := range contentStates {
-		s := draftjs.Render(&block, config)
-		if s != needStrings[i] {
-			t.Errorf("\n%s\n", s)
-			t.Errorf("\n%s\n", needStrings[i])
+	for _, test := range GetTestsTable() {
+		if err = json.Unmarshal([]byte(test.State), &contentState); err != nil {
+			t.Errorf("Failed unmarshal content (test \"%s\"): \n%v\n%s", test.Name, err, test.State)
+			return
 		}
-		i++
+
+		s := draftjs.Render(&contentState, config)
+		if s != test.Expected {
+			t.Errorf("Error (test \"%s\"):\nGot: %s\nExpected: %s", test.Name, s, test.Expected)
+		}
 	}
 }
 
-func TestRenderOneSymbol(t *testing.T) {
-	var (
-		contentState = new(draftjs.ContentState)
-		err          error
-	)
+func TestRenderPlainText(t *testing.T) {
+	contentState := draftjs.ContentState{}
+	var err error
+	for _, test := range GetTestsPlainTable() {
 
-	if err = json.Unmarshal([]byte(testStringOneSymbol), contentState); err != nil {
-		t.Errorf("Failed unmarshal content: %v", err)
-		return
-	}
+		if err = json.Unmarshal([]byte(test.State), &contentState); err != nil {
+			t.Errorf("Failed unmarshal content (test \"%s\"): \n%v\n%s", test.Name, err, test.State)
+			return
+		}
 
-	config := draftjs.NewDefaultConfig()
-	s := draftjs.Render(contentState, config)
-	if s != testStringOneSymbolExpected {
-		t.Errorf("\nExpected:\n%s\nGot:\n%s", testStringOneSymbolExpected, s)
-	}
-}
+		s := draftjs.RenderPlainText(&contentState)
+		if s != test.Expected {
+			t.Errorf("Error (test \"%s\"):\nGot: %s\nExpected: %s", test.Name, s, test.Expected)
+		}
 
-func TestRenderWrongRanges(t *testing.T) {
-	var (
-		contentState = new(draftjs.ContentState)
-		err          error
-	)
-
-	if err = json.Unmarshal([]byte(testStringWrongRanges), contentState); err != nil {
-		t.Errorf("Failed unmarshal content: %v", err)
-		return
-	}
-
-	config := draftjs.NewDefaultConfig()
-	s := draftjs.Render(contentState, config)
-	if s != testStringWrongRangesExpected {
-		t.Errorf("\nExpected:\n%s\nGot:\n%s", testStringWrongRangesExpected, s)
 	}
 }
 
@@ -75,7 +53,7 @@ func BenchmarkRender(b *testing.B) {
 		err           error
 	)
 
-	if err = json.Unmarshal([]byte(testString), &contentStates); err != nil {
+	if err = json.Unmarshal([]byte(ExampleDraftStateSource), &contentStates); err != nil {
 		b.Errorf("Failed unmarshal content: %v", err)
 		return
 	}
